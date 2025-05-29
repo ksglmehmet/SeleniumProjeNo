@@ -33,42 +33,43 @@ driver.get(url)
 
 wait = WebDriverWait(driver, 10)
 
-# time.sleep(2)
+time.sleep(1)
+UserName = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="otds_username"]')))
 UserName = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otds_username"]')))
 UserName.click()
 UserName.send_keys(ph.User_Name)
 
-# time.sleep(2)
+time.sleep(1)
 Password = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otds_password"]')))
 Password.click()
 Password.send_keys(ph.User_Password)
 
-# time.sleep(2)
+time.sleep(1)
 Signin = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="loginbutton"]')))
 Signin.click()
 
-# time.sleep(2)
+time.sleep(1)
 Abone_Proje_Arsivi = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="rowCell0"]/td[3]/a[1]')))
 Abone_Proje_Arsivi.click()
 
-# time.sleep(2)
+time.sleep(1)
 Proje_Arsivi = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="rowCell5"]/td[3]/a[1]')))
 Proje_Arsivi.click()
 
-# time.sleep(2)
+time.sleep(1)
 Name_Sirala = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]/tbody/tr[1]/td[3]/a')))
 Name_Sirala.click()
 
-# time.sleep(2)
+time.sleep(1)
 I00001_2023 = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="rowCell1"]/td[3]/a[1]')))
 I00001_2023.click()
 
-# time.sleep(2)
+time.sleep(1)
 Name_Sirala_1 = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]/tbody/tr[1]/td[3]/a')))
 Name_Sirala_1.click()
 
 # Sayfadan, proje nolarını alıcam. Bu numaraları for a sokacağım.
-time.sleep(1)
+time.sleep(2)
 
 ProjeNolar = []
 ArsivNo = "I00001"
@@ -78,7 +79,7 @@ ProjeNo_Kategory = []
 Sayfadaki_Text = driver.find_element(By.XPATH, '//*[@id="browseViewCoreTable"]').text
 lines = Sayfadaki_Text.split("\n")
 Tiffs = []
-
+time.sleep(1)
 for i in lines:
     if i.strip().endswith('.tiff'):
         # .tiff uzantısını kaldır ve boşlukları temizle
@@ -89,82 +90,85 @@ print(f"\nSayfada toplam: {len(Tiffs)} adet .tiff dosyası bulundu.")
 print("Sayfada olan Tiff'ler:")
 for tiff in Tiffs:
     print(f" - {tiff}")
-i = 0
+
 for i in range(len(Tiffs) - 1):
-    # time.sleep(1.5)
+    time.sleep(1)
     Ilgili_Tiff = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'#rowCell{i} > td.browseItemName > a:nth-child(2)')))
     Ilgili_Tiff.click()
 
-    # time.sleep(1.5)
+    time.sleep(1)
     Properties = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="menuItem_Properties"]')))
     Properties.click()
 
-    get_tiff = driver.find_element(By.XPATH, '//*[@id="81194566_144"]').text
-    print(f"{get_tiff} Belgesi İşleme Alınıyor...")
+    get_tiff = driver.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[1]/td/div/div[6]/div[2]').text
+    
+    print(f"\n{get_tiff} Belgesi İşleme Alınıyor...")
 
-    # time.sleep(1.5)
+    time.sleep(1)
     Categories = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="LLInnerContainer"]/tbody/tr[2]/td/table/tbody/tr[1]/td/form/table/tbody/tr[1]/td/ul/div[2]/li[5]')))
     Categories.click()
 
-    # time.sleep(1.5)
+    time.sleep(1)
     # a = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#LLInnerContainer > tbody > tr:nth-child(2) > td > table > tbody > tr > td > form > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2)'))).text
 
     try:
         a = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#LLInnerContainer > tbody > tr:nth-child(2) > td > table > tbody > tr > td > form > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2)'))).text
     except:
-        print(f"{get_tiff} Belgesinin Kategori Bilgisi Zaten Mevcut !")
+        print(f"\n{get_tiff} Belgesinin Kategori Bilgisi Zaten Mevcut !")
         a = ""  # Boş string atayarak devam et
 
     if a == 'No Categories for this Document.':
-        # time.sleep(2)
+        time.sleep(1)
         print(f"{get_tiff} Belgesinin Kategori Bilgileri Dolduruluyor...")
         original_window = driver.current_window_handle
         Add_Categories = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="LLInnerContainer"]/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[1]/td/table/tbody/tr/td/a/img')))
         Add_Categories.click()
-        # time.sleep(2)
+        time.sleep(1)
         windows = driver.window_handles
-        # time.sleep(2)
+        time.sleep(1)
         for i in windows:
             if i != original_window:
             # Ana pencere olmayan pencereye geçiş yap
                 driver.switch_to.window(i)
                 break
 
-        # time.sleep(2)
+        time.sleep(1)
         
         AboneArsivi = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div[1]/table/tbody/tr[2]/td/table/tbody/tr[4]/td[5]/a')))  
         AboneArsivi.click()
-        
-        # time.sleep(3)
 
+        print(f"\n{get_tiff} Belgesinin Arşiv Bilgisi Ekleniyor...")
+        time.sleep(2)
+        
         ArsivBilgisi = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div[1]/table/tbody/tr[2]/td/table/tbody/tr[10]/td[1]/a')))
         ArsivBilgisi.click()      
         
-        # time.sleep(3)
+        time.sleep(1)
         driver.switch_to.window(original_window)
         
-        # time.sleep(2)
+        time.sleep(1)
         ArsivNumarasi = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_2_1"]')))
         ArsivNumarasi.click()
-        # time.sleep(2)
+        time.sleep(1)
         ArsivNumarasi.send_keys(ArsivNo)
         
-        # time.sleep(2)
+        time.sleep(1)
         ArsivGrup = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_3_1"]')))
         ArsivGrup.click()
-        time.sleep(2)
-        
+
+        time.sleep(1)
         ArsivGrup.send_keys(ArsivGrupNo)
-        # time.sleep(2)
         
+        time.sleep(1)
         Apply = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[2]')))
         Apply.click()
         
-        # time.sleep(3)
+        time.sleep(3)
 
         Add_Categories = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="LLInnerContainer"]/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[1]/td/table/tbody/tr/td/a/img')))
         Add_Categories.click()
 
+        time.sleep(1)
         windows = driver.window_handles
 
         for i in windows:
@@ -173,20 +177,21 @@ for i in range(len(Tiffs) - 1):
                 driver.switch_to.window(i)
                 break
 
-        # time.sleep(2)   
+        time.sleep(1)  
 
         AboneArsivi = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div[1]/table/tbody/tr[2]/td/table/tbody/tr[4]/td[5]/a')))  
         AboneArsivi.click()
 
-        # time.sleep(2)
+        print(f"\n{get_tiff} Belgesinin Proje Doküman Bilgisi Ekleniyor...")
+        time.sleep(2)
 
         ProjeDoküman_Bilgisi = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div[1]/table/tbody/tr[2]/td/table/tbody/tr[20]/td[1]/a')))
         ProjeDoküman_Bilgisi.click()
 
-        # time.sleep(2)
+        time.sleep(1)
         driver.switch_to.window(original_window)
 
-        # time.sleep(2)   
+        time.sleep(1)  
         try:
             ProjeNo = driver.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[1]/td/div/div[6]').text.split(".")[0]
             EskiProjeNo = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_2_1"]')))
@@ -198,19 +203,19 @@ for i in range(len(Tiffs) - 1):
         except Exception as e:
             print(f"Hata oluştu: {str(e)}")
 
-        # time.sleep(2) 
+        time.sleep(1)
 
         YeniProjeNo = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_3_1"]')))
         YeniProjeNo.click()
         YeniProjeNo.send_keys(ProjeNo)
 
-        # time.sleep(2) 
+        time.sleep(1) 
 
         BalyaNo = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_4_1"]')))
         BalyaNo.click()
         BalyaNo.send_keys(ArsivNo)
 
-        # time.sleep(2) 
+        time.sleep(1) 
 
         # ProjeDoküman_Tipi = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_5_1"]')))
         # ProjeDoküman_Tipi.click()
@@ -220,27 +225,31 @@ for i in range(len(Tiffs) - 1):
         ProjeDoküman_Tipi_Secim = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[7]/td[2]/select/option[2]')))
         ProjeDoküman_Tipi_Secim.click()
 
-        # time.sleep(2)
+        time.sleep(1)
 
         ProjeGuncel_Durum = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[9]/td[2]/select/option[2]')))
         ProjeGuncel_Durum.click()
 
-        # time.sleep(2)
+        time.sleep(1)
 
         Apply = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[2]')))
         Apply.click()
 
-        # time.sleep(3)
+        time.sleep(3)
 
         Submit = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[1]')))
         Submit.click()
+
+        time.sleep(4)
 
     else:
         
         ProjeNo_Kategory_Var = driver.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[1]/td/div/div[6]').text.split(".")[0]
         ProjeNo_Kategory.append(ProjeNo_Kategory_Var)
-        print(f"{ProjeNo_Kategory_Var} Numaralı Projenin Kategori Bilgisi Mevcuttur.")
-        print(f"{ProjeNo_Kategory_Var} Numaralı Proje, Kaydediliyor.")
+        print(f"{ProjeNo_Kategory_Var} Numaralı Proje, 'Kategori Bilgisi Olanlar'a Kaydediliyor.")
+        time.sleep(2)
+        Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80455978_0"]')))
+        Klasore_Donus.click()
 
 # EKLEME: Sonuçları göstermek için
 print(f"\nİşlem Tamamlandı!")
