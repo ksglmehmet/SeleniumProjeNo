@@ -115,19 +115,20 @@ for x in range(41, (Total_page + 1)):
     if x != 1:
         BirPage_ileri = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#PageNextImg')))
         BirPage_ileri.click()
+        time.sleep(2)
         # wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/div/table/tbody/tr/td[1]'))).click() # Geri
         # driver.get(f"{ph.base_url}{x}_1__25_")
         # time.sleep(2)
         ################################################################# Find_element ? wait.until ?
         page_count = []
-        page_info = driver.find_element(By.XPATH, '//*[@id="browseViewCoreTable"]').text.split("\n")
+        page_info = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]'))).text.split("\n")
         for y in page_info:
             if y.strip().endswith('.tiff'):
                 page = y.strip().replace('.tiff', '')
                 page_count.append(page)
         for i in range(0, len(page_count)):
             print(f"\n {x}. Sayfanın, {i+1}. Projesi İşleme Alınıyor. (Proje Nosu: {page_count[i]})")
-            # time.sleep(1)
+            time.sleep(0.5)
             #rowCell15 > td.browseItemName > a:nth-child(2)
             Ilgili_Tiff = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'#rowCell{i} > td.browseItemName > a:nth-child(2)')))
             Ilgili_Tiff.click()
@@ -209,19 +210,20 @@ for x in range(41, (Total_page + 1)):
                         driver.switch_to.window(i)
                         break
 
-                time.sleep(1.75)  
+                time.sleep(1)  
 
                 AboneArsivi = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div[1]/table/tbody/tr[2]/td/table/tbody/tr[4]/td[5]/a')))  
                 AboneArsivi.click()
 
                 
-                time.sleep(1.75)
+                time.sleep(1)
 
                 ProjeDoküman_Bilgisi = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div[1]/table/tbody/tr[2]/td/table/tbody/tr[20]/td[1]/a')))
                 ProjeDoküman_Bilgisi.click()
 
                 time.sleep(2.5)
                 driver.switch_to.window(original_window)
+                time.sleep(1)
 
                 # time.sleep(1)  
                 try:
