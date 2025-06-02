@@ -15,6 +15,7 @@ import path as ph
 import pandas as pd
 import os
 import numpy as np
+from selenium.common.exceptions import ElementClickInterceptedException
 
 # path = ph.path_driver2
 options = webdriver.FirefoxOptions()
@@ -33,7 +34,7 @@ driver.maximize_window()
 url = ph.url_proje_firefox
 driver.get(url)
 
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 20)
 
 time.sleep(1)
 UserName = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otds_username"]')))
@@ -69,9 +70,6 @@ time.sleep(1)
 Name_Sirala_1 = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]/tbody/tr[1]/td[3]/a')))
 Name_Sirala_1.click()
 
-# time.sleep(1)
-# driver.get(ph.base_url)
-# Sayfadan, proje nolarını alıcam. Bu numaraları for a sokacağım.
 ProjeNolar = []
 ArsivNo = "I00001"
 ArsivGrupNo = "I00001-2023"
@@ -82,44 +80,17 @@ ProjeNo_Kategory = []
 Total_items = int(driver.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td[1]').text.split(" ")[-2])
 Total_page = int(np.ceil(Total_items / 25))
 
-# driver.get(ph.base_url)
-#PageNextImg
-#PagePrevImg
-# BirPage_ileri = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#PageNextImg')))
-# BirPage_ileri.click()
-
-
-
-# BirPage_geri = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#PagePrevImg')))
-# BirPage_geri.click()
-
-# td.pageSelectorReference:nth-child(3)
-# td.pageSelectorReference:nth-child(5)
-# td.pageSelectorReference:nth-child(7)
-# time.sleep(2)
-# td.pageSelectorReference:nth-child(5)
-# /html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/div/table/tbody/tr/td[7]
-# /html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/div/table/tbody/tr/td[5]
-# /html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/div/table/tbody/tr/td[3]
-# driver.find_element(By.CSS_SELECTOR, 'td.pageSelectorReference:nth-child(5)').text
-
-
-
 print(f"\n I00001-2023 Klasöründe Toplam: {Total_items} Adet .tiff Dosyası Var.")
 
 # X İ DEĞİŞTİR: 
 #Buraya sayfanın forunu koy
-for x in range(41, (Total_page + 1)):
+for x in range(87, (Total_page + 1)):
     print(f"\nToplam {Total_page} Tane Sayfa Var.\n")
     print(f"{x}. Sayfanın Tifflerine Giriliyor...\n")
     if x != 1:
         BirPage_ileri = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#PageNextImg')))
         BirPage_ileri.click()
-        time.sleep(2)
-        # wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/div/table/tbody/tr/td[1]'))).click() # Geri
-        # driver.get(f"{ph.base_url}{x}_1__25_")
-        # time.sleep(2)
-        ################################################################# Find_element ? wait.until ?
+        time.sleep(3)
         page_count = []
         page_info = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]'))).text.split("\n")
         for y in page_info:
@@ -128,15 +99,20 @@ for x in range(41, (Total_page + 1)):
                 page_count.append(page)
         for i in range(0, len(page_count)):
             print(f"\n {x}. Sayfanın, {i+1}. Projesi İşleme Alınıyor. (Proje Nosu: {page_count[i]})")
-            time.sleep(0.5)
-            #rowCell15 > td.browseItemName > a:nth-child(2)
-            Ilgili_Tiff = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'#rowCell{i} > td.browseItemName > a:nth-child(2)')))
-            Ilgili_Tiff.click()
+            time.sleep(1.5)
+            try:
+                Ilgili_Tiff = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'#rowCell{i} > td.browseItemName > a:nth-child(2)')))
+                time.sleep(0.5)  # Minik bekleme
+                Ilgili_Tiff.click()
+            except ElementClickInterceptedException:
+                print("⚠️ Element üstü kapanmış. JavaScript ile tıklanıyor...")
+                driver.execute_script("arguments[0].click();", Ilgili_Tiff)
 
-            # time.sleep(1)
+            time.sleep(1)
             Properties = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="menuItem_Properties"]')))
             Properties.click()
             
+            time.sleep(0.75)
             get_tiff = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[1]/td/div/div[6]/div[2]'))).text.split(".")[0]
             
             time.sleep(1)
@@ -144,7 +120,6 @@ for x in range(41, (Total_page + 1)):
             Categories.click()
 
             time.sleep(1)
-            # a = driver.find_element(By.CSS_SELECTOR, '#LLInnerContainer > tbody > tr:nth-child(2) > td > table > tbody > tr > td > form > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2)').text
             
             try:
                 a = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#LLInnerContainer > tbody > tr:nth-child(2) > td > table > tbody > tr > td > form > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2)'))).text
@@ -251,11 +226,6 @@ for x in range(41, (Total_page + 1)):
 
                 time.sleep(1) 
 
-                # ProjeDoküman_Tipi = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_5_1"]')))
-                # ProjeDoküman_Tipi.click()
-
-                # time.sleep(2)
-
                 ProjeDoküman_Tipi_Secim = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[7]/td[2]/select/option[2]')))
                 ProjeDoküman_Tipi_Secim.click()
 
@@ -269,12 +239,12 @@ for x in range(41, (Total_page + 1)):
                 Apply = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[2]')))
                 Apply.click()
                 print(f"{get_tiff} Proje Belgesinin Proje Doküman Bilgisi Eklendi.")
-                time.sleep(3)
+                time.sleep(2)
 
                 Submit = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[1]')))
                 Submit.click()
                 print(f"{get_tiff} Projesinin Kategori Bilgileri Eklendi ve Submit Edildi !")
-                time.sleep(4)
+                time.sleep(2.5)
 
             else:
                 ProjeNo_Kategory_Var = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[1]/td/div/div[6]'))).text.split(".")[0]
@@ -415,11 +385,6 @@ for x in range(41, (Total_page + 1)):
 
                 time.sleep(1) 
 
-                # ProjeDoküman_Tipi = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="_1_1_5_1"]')))
-                # ProjeDoküman_Tipi.click()
-
-                # time.sleep(2)
-
                 ProjeDoküman_Tipi_Secim = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[7]/td[2]/select/option[2]')))
                 ProjeDoküman_Tipi_Secim.click()
 
@@ -433,12 +398,12 @@ for x in range(41, (Total_page + 1)):
                 Apply = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[2]')))
                 Apply.click()
                 print(f"{get_tiff} Proje Belgesinin Proje Doküman Bilgisi Eklendi.")
-                time.sleep(2)
+                time.sleep(1.5)
 
                 Submit = wait.until(EC.element_to_be_clickable((By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form/table/tbody/tr[2]/td/table/tbody/tr[4]/td/table/tbody/tr/td[2]/input[1]')))
                 Submit.click()
                 print(f"{get_tiff} Projesinin Kategori Bilgileri Eklendi ve Submit Edildi !")
-                time.sleep(3)
+                time.sleep(2)
 
             else:
                 
@@ -450,29 +415,7 @@ for x in range(41, (Total_page + 1)):
                 Klasore_Donus.click()
 
 
-# EKLEME: Sonuçları göstermek için
 print(f"\nİşlem Tamamlandı!")
 print(f"Toplam işlenen proje sayısı: {len(ProjeNolar)}")
 print(f"Kategori bilgisi önceden mevcut olan proje sayısı: {len(ProjeNo_Kategory)}")
-
-# EKLEME: Driver'ı kapatmak için
-# driver.quit()
-
-# //*[@id="menuItem_Properties"]
-# //*[@id="menuItem_Properties"]
-# #menuItem_Properties
-# menuItem_Properties
-
-
-# #rowCell0 > td.browseItemName > a:nth-child(2)
-
-# driver.find_element(By.CSS_SELECTOR, '#rowCell0 > td.browseItemName > a.browseItemNameContainer').text
-# driver.find_element(By.CSS_SELECTOR, '#rowCell1 > td.browseItemName > a.browseItemNameContainer').text
-
-
-
-
-
-# # time.sleep(3)
-# # driver.quit()
 
