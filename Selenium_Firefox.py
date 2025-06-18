@@ -34,7 +34,7 @@ driver.maximize_window()
 url = ph.url_proje_firefox
 driver.get(url)
 
-wait = WebDriverWait(driver, 20)
+wait = WebDriverWait(driver, 10)
 
 time.sleep(1)
 UserName = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="otds_username"]')))
@@ -80,17 +80,17 @@ ProjeNo_Kategory = []
 Total_items = int(driver.find_element(By.XPATH, '/html/body/table/tbody/tr[2]/td/table/tbody/tr[2]/td/table/tbody/tr/td/form[3]/div/div/div/table/tbody/tr/td[2]/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td[1]').text.split(" ")[-2])
 Total_page = int(np.ceil(Total_items / 25))
 
-print(f"\n I00001-2023 Klasöründe Toplam: {Total_items} Adet .tiff Dosyası Var.")
+print(f"\n {ArsivGrupNo} Klasöründe Toplam: {Total_items} Adet .tiff Dosyası Var.")
 
 # X İ DEĞİŞTİR: 
 #Buraya sayfanın forunu koy
-for x in range(87, (Total_page + 1)):
+for x in range(171, (Total_page + 1)):
     print(f"\nToplam {Total_page} Tane Sayfa Var.\n")
     print(f"{x}. Sayfanın Tifflerine Giriliyor...\n")
     if x != 1:
         BirPage_ileri = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#PageNextImg')))
         BirPage_ileri.click()
-        time.sleep(3)
+        time.sleep(1.5)
         page_count = []
         page_info = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]'))).text.split("\n")
         for y in page_info:
@@ -251,9 +251,10 @@ for x in range(87, (Total_page + 1)):
                 ProjeNo_Kategory.append(ProjeNo_Kategory_Var)
                 print(f"{ProjeNo_Kategory_Var} Numaralı Proje, 'Kategori Bilgisi Olanlar'a Kaydediliyor.")
                 time.sleep(2)
-                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80455978_0"]')))
+                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80465872_0"]')))
                 Klasore_Donus.click()
     else:
+        time.sleep(1.5)
         page_count = []
         page_info = driver.find_element(By.XPATH, '//*[@id="browseViewCoreTable"]').text.split("\n")
         for y in page_info:
@@ -411,7 +412,7 @@ for x in range(87, (Total_page + 1)):
                 ProjeNo_Kategory.append(ProjeNo_Kategory_Var)
                 print(f"{ProjeNo_Kategory_Var} Numaralı Proje, 'Kategori Bilgisi Olanlar'a Kaydediliyor.")
                 time.sleep(2)
-                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80455978_0"]')))
+                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80465872_0"]')))
                 Klasore_Donus.click()
 
 
