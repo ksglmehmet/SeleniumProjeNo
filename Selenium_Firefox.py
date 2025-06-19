@@ -84,13 +84,13 @@ print(f"\n {ArsivGrupNo} Klasöründe Toplam: {Total_items} Adet .tiff Dosyası 
 
 # X İ DEĞİŞTİR: 
 #Buraya sayfanın forunu koy
-for x in range(171, (Total_page + 1)):
+for x in range(195, (Total_page + 1)):
     print(f"\nToplam {Total_page} Tane Sayfa Var.\n")
     print(f"{x}. Sayfanın Tifflerine Giriliyor...\n")
     if x != 1:
         BirPage_ileri = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#PageNextImg')))
         BirPage_ileri.click()
-        time.sleep(1.5)
+        time.sleep(5)
         page_count = []
         page_info = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="browseViewCoreTable"]'))).text.split("\n")
         for y in page_info:
@@ -251,7 +251,7 @@ for x in range(171, (Total_page + 1)):
                 ProjeNo_Kategory.append(ProjeNo_Kategory_Var)
                 print(f"{ProjeNo_Kategory_Var} Numaralı Proje, 'Kategori Bilgisi Olanlar'a Kaydediliyor.")
                 time.sleep(2)
-                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80465872_0"]')))
+                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80455978_0"]')))
                 Klasore_Donus.click()
     else:
         time.sleep(1.5)
@@ -412,7 +412,7 @@ for x in range(171, (Total_page + 1)):
                 ProjeNo_Kategory.append(ProjeNo_Kategory_Var)
                 print(f"{ProjeNo_Kategory_Var} Numaralı Proje, 'Kategori Bilgisi Olanlar'a Kaydediliyor.")
                 time.sleep(2)
-                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80465872_0"]')))
+                Klasore_Donus = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="80455978_0"]')))
                 Klasore_Donus.click()
 
 
