@@ -18,17 +18,20 @@ import numpy as np
 from selenium.common.exceptions import ElementClickInterceptedException
 
 # path = ph.path_driver2
-options = webdriver.FirefoxOptions()
+firefox_options = Options()
 # options.add_experimental_option("detach", True)
-options.add_argument('--disable-notifications')
-options.add_argument("--disable-infobars")
-options.add_argument("start-maximized")
-options.add_argument("--disable-extensions")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--ignore-certificate-errors")
+firefox_options.add_argument('--disable-notifications')
+firefox_options.add_argument("--disable-infobars")
+firefox_options.add_argument("start-maximized")
+firefox_options.add_argument("--disable-extensions")
+firefox_options.add_argument("--disable-gpu")
+firefox_options.add_argument("--no-sandbox")
+firefox_options.add_argument("--ignore-certificate-errors")
 
-driver = webdriver.Firefox(service = FirefoxService(GeckoDriverManager().install()))
+firefox_options.binary_location = ph.location
+service = FirefoxService(executable_path = ph.gecko)
+driver = webdriver.Firefox(service = service, options = firefox_options)
+# driver = webdriver.Firefox(service = FirefoxService(GeckoDriverManager().install()))
 driver.maximize_window()
 
 url = ph.url_proje_firefox
